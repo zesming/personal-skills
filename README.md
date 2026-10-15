@@ -9,6 +9,7 @@
 | [devflow](skills/devflow/SKILL.md) | 按任务规模执行开发、独立审查、验证与收尾流程。 |
 | [agc-upload](skills/agc-upload/SKILL.md) | HarmonyOS 发布签名、打包、AGC API 上传与解析确认；不自动提审或分发。 |
 | [app-icon-release](skills/app-icon-release/SKILL.md) | 配置、导出并校验 HarmonyOS、iOS、Android 图标与商店素材。 |
+| [project-audit](skills/project-audit/SKILL.md) | 从产品、UI 与交互、代码、测试四个维度审查项目，交叉质证后产出报告，并开 draft PR/MR 作为后续修复载体。 |
 
 每个 `skills/<name>/` 是一个完整单元。复用时保留目录中的 `references/`、`scripts/`、`assets/` 和 `agents/` 等配套文件，相对引用以 skill 目录为基准。
 
