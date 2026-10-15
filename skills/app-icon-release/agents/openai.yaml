@@ -1,0 +1,4 @@
+interface:
+  display_name: "App Icon Release"
+  short_description: "配置与导出 HarmonyOS、iOS、Android 图标"
+  default_prompt: "使用 $app-icon-release 配置并校验应用图标及商店导出。"

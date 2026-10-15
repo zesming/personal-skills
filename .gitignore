@@ -1,0 +1,52 @@
+# Local/editor state
+.DS_Store
+.idea/
+.vscode/
+
+# Dependency and Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+node_modules/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+credentials*.json
+*-credentials.json
+private.json
+service-account*.json
+api-client*.json
+key-password
+build-profile.json5
+*-build-profile.json5
+signing/
+.local/
+
+# Signing material
+*.key
+*.pem
+*.p12
+*.pfx
+*.p7b
+*.p8
+*.cer
+*.crt
+*.der
+*.csr
+*.jks
+*.keystore
+*.mobileprovision
+
+# Generated application packages and upload receipts
+*.app
+*.hap
+*.hsp
+*.apk
+*.aab
+*.ipa
+receipt.json
+*-receipt.json

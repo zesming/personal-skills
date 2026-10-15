@@ -1,0 +1,4 @@
+interface:
+  display_name: "AGC 打包、签名与上传"
+  short_description: "构建签名，通过 API 上传 HarmonyOS 软件包并确认解析结果"
+  default_prompt: "使用 $agc-upload 完成当前 HarmonyOS 应用的发布签名、打包、AGC API 上传及解析确认。"
