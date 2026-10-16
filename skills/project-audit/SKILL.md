@@ -7,7 +7,7 @@ description: 项目全面体检：从产品逻辑、UI 与交互、代码实现�
 
 被委派执行子任务的 subagent 不使用本 skill，直接完成 brief 里的任务。
 
-本 skill 同时用于 Claude Code 和 Codex。文中的 reviewer / verifier 指角色，不是 agent 名字：从当前环境里选最匹配的 subagent，没有就用通用 subagent，并把角色要求写进 brief。审查和质证 subagent 要能把结果写进 `<AUDIT>`：被定义为完全只读、不能写文件的 agent 不选，改用通用 subagent，把只读约束写进 brief。续用已有 subagent：Claude Code 用 SendMessage，Codex 用 followup_task；不支持续用时重新派一个，把需要的上下文写进 brief。派审查类 subagent 时不让它继承当前对话（Codex 中用 `fork_turns="none"`）。任何 subagent 因用量上限、超时等中断时，续用同一个让它从中断处继续，不要重新派一个从头来过（用量上限通常要等额度恢复，立即重试多半还会失败，拿不准就问用户）；为此派出后把 subagent ID 记入 progress.md。只能改派新 subagent 时，让它接着已有的结果文件往下写，不要覆盖。文中的 `references/…`、`assets/…` 都相对本 skill 根目录；`<AUDIT>` 指第 1 步在用户原仓库根目录建的工作目录 `.audit/<日期><后缀>/` 的绝对路径，传给 subagent 时一律展开成绝对路径。`<临时路径>` 指系统临时目录下新建的目录，不放在仓库里。
+本 skill 同时用于 Claude Code 和 Codex。文中的 reviewer / verifier 指角色，不是 agent 名字：从当前环境里选最匹配的 subagent，没有就用通用 subagent，并把角色要求写进 brief。审查和质证 subagent 要能把结果写进 `<AUDIT>`：被定义为完全只读、不能写文件的 agent 不选，改用通用 subagent，把只读约束写进 brief。续用已有 subagent：Claude Code 用 SendMessage，Codex 用 `followup_task`（`target` 填派出时的 `task_name`）；不支持续用时重新派一个，把需要的上下文写进 brief。派审查类 subagent 时不让它继承当前对话（Codex 中用 `fork_turns="none"`）。任何 subagent 因用量上限、超时等中断时，续用同一个让它从中断处继续，不要重新派一个从头来过（用量上限通常要等额度恢复，立即重试多半还会失败，拿不准就问用户）；为此派出后把 subagent ID 记入 progress.md。只能改派新 subagent 时，让它接着已有的结果文件往下写，不要覆盖。文中的 `references/…`、`assets/…` 都相对本 skill 根目录；`<AUDIT>` 指第 1 步在用户原仓库根目录建的工作目录 `.audit/<日期><后缀>/` 的绝对路径，传给 subagent 时一律展开成绝对路径。`<临时路径>` 指系统临时目录下新建的目录，不放在仓库里。
 
 ## 这个 skill 产出什么
 
@@ -89,7 +89,7 @@ description: 项目全面体检：从产品逻辑、UI 与交互、代码实现�
 
 不给它别的维度的发现，让每个维度独立判断（brief 里写明不读 `<AUDIT>` 下没列给它的文件）。
 
-需要改动代码才能做的验证（如测试维度的变异验证）由 reviewer 提出候选，主 agent 在第 3 步汇总时按 `references/tests.md` 执行，结果写进对应条目的依据。
+需要改动代码才能做的验证（如测试维度的变异验证）由 reviewer 提出候选，主 agent 在第 3 步汇总时按 `references/consensus.md`「变异验证」执行，结果写进对应条目的依据。
 
 环境里没有 subagent 时，主 agent 按维度依次自己审，一个维度审完再进入下一个。
 
