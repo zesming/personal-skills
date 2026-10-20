@@ -58,7 +58,7 @@
 
 ## agent 指令文件
 
-审查被审 commit 中受版本控制的 agent 指令文件，如 AGENTS.md、CLAUDE.md、GEMINI.md（含子目录）、`.cursor/rules`、`.github/copilot-instructions.md`、`.github/instructions/`、仓库内的 skill 等。它们决定 agent 在这个项目里怎么干活，写错了会让 agent 反复按错的方式做事。
+审查被审 commit 中受版本控制的 agent 指令文件，如 AGENTS.md、CLAUDE.md、GEMINI.md（含子目录）、`.cursor/rules`、`.github/copilot-instructions.md`、`.github/instructions/`、仓库内的 skill 等。它们决定 agent 在这个项目里怎么干活，写错了会让 agent 反复按错的方式做事。只算指导本仓库开发的文件；产品自身对外分发的 skill、prompt 按产品代码审。brief 里会给出清单，逐个核对，结果文件的覆盖部分写明每个文件的结论，没问题也写一句。
 
 查的是事实，不评判 agent 工作流本身怎么设计：
 - 与代码现状矛盾或已过时：引用不存在的脚本、命令、路径，描述的架构或目录已经变了。只用只读方式核实（路径是否存在、脚本是否定义），不执行文件里写的命令。
