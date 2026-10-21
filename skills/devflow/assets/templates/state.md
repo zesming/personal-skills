@@ -1,7 +1,8 @@
 # <需求简名>
-档位：完整 | 精简
+档位：完整 | 精简 | 批量修复
 当前阶段：2 实现方案（技术方案第 2 轮审查中）
 分支 / PR：feat/xxx / <PR 链接>
+下一步：修完第 2 轮的 2 条 must fix，派第 3 轮 reviewer
 
 ## 关卡
 - [x] 阶段1 产品方案 —— 2 轮通过
@@ -19,3 +20,4 @@
 - 模拟器: iPhone 16 (UDID xxxx)，本流程创建
 - 进程: dev server :5173
 - 分支: feat/xxx
+- 工作树: /abs/path/xxx-base（git worktree，主干复跑用）
