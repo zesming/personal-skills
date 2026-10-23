@@ -3,7 +3,7 @@
 ## 前置检查
 
 - **授权**：看 progress.md。已授权才推送和开 PR/MR；仍是"待问"就再问一次，没有回答按未授权处理；"已问未答"（第 3 步问过、用户没回）不再问，按未授权处理。本地分支和提交无论是否授权都做。
-- **平台与目标**：沿用第 1 步记录的 `<推送 remote>`、`<目标 remote>`、可见性、PR/MR 目标分支、被审 commit。GitHub 用 `gh`，GitLab 用 `glab`，检查认证状态（`gh auth status` / `glab auth status`）；其他平台有 CLI 时同样用它建 draft PR/MR，拿不准参数时把命令交给用户执行。
+- **平台与目标**：沿用第 1 步记录的 `<推送 remote>`、`<目标 remote>`、可见性、PR/MR 目标分支、被审 commit。用平台 CLI / API 建 draft PR/MR（用法见 SKILL.md「环境与约定」）。
 - **未推送提交**：被审 commit 含远端没有的提交、或基线分支在远端不存在时，第 1 步用户还没做出选择、或没同意一起推送的，不推。
 
 ## 敏感内容
@@ -22,8 +22,8 @@
   - 按顺序发布：
     1. 按下文"PR/MR 内容"创建 PR/MR，"报告"一行先写"见下方评论"，记下返回的 PR/MR 链接。
     2. 把 PR/MR 链接填进 `<AUDIT>/report.md` 的元信息。报告里引用的截图是本地路径，打不开还会暴露本机目录：改为文字描述并注明"截图保存在审查者本地"，需要时提示用户在网页上手动上传。
-    3. 发报告全文：`gh pr comment <PR 链接> --body-file <AUDIT>/report.md`（GitLab：`glab mr note <MR 编号> --message "$(cat <AUDIT>/report.md)"`，在临时 worktree 里执行）。用 PR 链接而不是编号，fork 场景下不会被追问仓库。超过平台评论上限（GitHub 约 65536 字符）时按章节拆成几条，每条开头注明"第 i/n 部分"。
-    4. 把返回的评论链接回填进描述的"报告"一行（`gh pr edit <PR 链接> --body-file <AUDIT>/pr-body.md` / `glab mr update <MR 编号> --description "$(cat <AUDIT>/pr-body.md)"`）。不要写"第一条评论"，机器人可能先评论。
+    3. 发报告全文：用平台 CLI 或 API 把 `<AUDIT>/report.md` 发成 PR/MR 评论（在临时 worktree 里执行）。指定 PR/MR 时用链接而不是编号，fork 场景下不会被追问仓库。超过平台评论长度上限时按章节拆成几条，每条开头注明"第 i/n 部分"。
+    4. 把返回的评论链接回填进描述的"报告"一行（用平台 CLI 或 API 以 `<AUDIT>/pr-body.md` 更新描述）。不要写"第一条评论"，机器人可能先评论。
     5. 链接记入 progress.md。
   - **修复进度只记在 PR/MR 描述的清单里**：S0–S3 全部逐条列出（不受下文 60 条的省略规则限制；"接受风险"的条目除外）；修完勾选；误判、另排在清单条目后标注"（误判：原因）""（另排：去向）"并在 PR/MR 里评论一句。报告评论发出后不再修改。还没开 PR/MR 时，进度记在 `<AUDIT>/pr-body.md` 的清单里。
 
@@ -44,16 +44,9 @@ git worktree add -b <audit 分支> <临时路径> <被审 commit>
 
 ## PR/MR 内容
 
-描述先写到 `<AUDIT>/pr-body.md`，再显式指定目标分支创建 **draft**（在临时 worktree 里执行）：
+描述先写到 `<AUDIT>/pr-body.md`，再用平台 CLI 或 API 显式指定目标分支、标题和描述创建 **draft**（在临时 worktree 里执行）。fork 场景要指定上游仓库和源分支所属的 fork；参数拿不准时不要试错，把命令交给用户执行。
 
-```sh
-gh pr create --draft --base <目标分支> --title "<标题>" --body-file <AUDIT>/pr-body.md
-glab mr create --draft --target-branch <目标分支> --title "<标题>" --description "$(cat <AUDIT>/pr-body.md)" --yes
-```
-
-fork 场景：GitHub 用 `--repo <上游仓库>` 并按需加 `--head <fork 所有者>:<audit 分支>`；GitLab 或拿不准参数时，不要试错，把命令交给用户执行。
-
-创建命令报错、超时，或输出里解析不出链接时，不要直接重跑：先按源分支查是否已经建成（`gh pr list --head <audit 分支> --state all`，fork 场景加 `--repo <上游仓库>`；`glab mr list --source-branch <audit 分支>`；其他平台用对应 CLI 按源分支查），有就用它，没有再重试。
+创建命令报错、超时，或输出里解析不出链接时，不要直接重跑：先用平台 CLI 或 API 按源分支查是否已经建成（含已关闭的；fork 场景在上游仓库里查），有就用它，没有再重试。
 
 标题：`项目审查：<YYYY-MM-DD> 全面审查报告与修复跟踪`（项目非中文时用对应语言）
 
@@ -94,4 +87,4 @@ S0/S1 始终逐条列出（"接受风险"的除外，见 SKILL.md「状态」）
 
 ## 无法提交时
 
-未授权、用户未确认推送、有远端没有的提交而用户未同意推送、没有 remote、平台不受支持、CLI 未安装或未认证时：保留本地 `<audit 分支>` 和提交，把 `<AUDIT>/pr-body.md` 的路径告诉用户（报告不入库时还要给出 `<AUDIT>/report.md` 的路径，并说明开 PR/MR 后要把它发成评论），说明缺什么、用户可以怎么提交（如登录 CLI 后执行的具体命令）。不改用其他托管方式，不绕过认证。
+未授权、用户未确认推送、有远端没有的提交而用户未同意推送、没有 remote、平台不受支持、没有可用且已认证的 CLI 或 API 时：保留本地 `<audit 分支>` 和提交，把 `<AUDIT>/pr-body.md` 的路径告诉用户（报告不入库时还要给出 `<AUDIT>/report.md` 的路径，并说明开 PR/MR 后要把它发成评论），说明缺什么、用户可以怎么提交（如登录 CLI 后执行的具体命令）。不改用其他托管方式，不绕过认证。

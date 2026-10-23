@@ -1,4 +1,4 @@
 interface:
   display_name: "Project Audit"
-  short_description: "产品、UI、代码、测试全面审查并开修复 PR/MR"
+  short_description: "全量或按 PR/MR、改动区间审查，出报告或行内评论"
   default_prompt: "使用 $project-audit 全面审查当前项目，产出报告并提交 draft PR/MR。"
