@@ -1,14 +1,14 @@
 # 阶段 2：实现方案
 
-基于产品方案产出技术方案和设计方案（涉及 UI 时）。两者可以并行，最后确认彼此一致。
+基于产品方案产出技术方案和设计方案（涉及 UI 时）。两份方案由主 agent 写，最后确认彼此一致；design.html 可以交 worker 与技术方案并行制作。
 
 输入：`.devflow/<需求>/product.md`、`prototype.html`、`acceptance.md`。
 
-D-xx、T-xx 和 AC 的落地列由 designer 在返回中给出，主 agent 合并写入 `.devflow/<需求>/acceptance.md`。
+D-xx、T-xx 和 AC 的落地列由主 agent 随方案一起写入 `.devflow/<需求>/acceptance.md`。
 
 ## 1. 技术方案
 
-designer 按 `assets/templates/tech.md` 产出正文，主 agent 写入 `.devflow/<需求>/tech.md`。
+主 agent 按 `assets/templates/tech.md` 写 `.devflow/<需求>/tech.md`。
 
 - **先看现有实现**：相关模块的结构、已有的模式和约定、可复用的部分。沿用项目已有做法优先于引入新东西。
 - **有已知方向时调研最佳实践**：如要做的东西社区有成熟方案（缓存策略、鉴权、状态管理、某类组件），派 explorer 查社区/GitHub 的主流做法和已知坑；已收集的信息足够支撑决策时可以跳过。
@@ -18,13 +18,13 @@ designer 按 `assets/templates/tech.md` 产出正文，主 agent 写入 `.devflo
 
 ## 2. 设计方案（涉及 UI 时）
 
-designer 产出设计说明正文，主 agent 写入 `.devflow/<需求>/design.md`；worker 按设计说明制作 `.devflow/<需求>/design.html`。
+主 agent 写设计说明 `.devflow/<需求>/design.md`；worker 按设计说明制作 `.devflow/<需求>/design.html`。
 
 - design.html 是高保真、可交互的 HTML 设计稿：使用项目现有的设计规范（颜色、字体、间距、组件库、图标），看起来就是产品的一部分。先找项目里的 design tokens、主题文件、组件库，没有的话从现有页面提取。
 - 覆盖与本需求相关的状态（如加载、空、错误、禁用）和关键交互反馈，不相关的状态不画；覆盖需要适配的尺寸或平台。
 - 界面方向有实质不确定时，可以派 explorer 调研同类产品的做法。
 - design.md 说明设计决策、组件复用关系、与原型的差异及原因。
-- **设计验收**：编号 `D-xx`，针对本次的样式与交互调整，写明可检查的条件（布局、各状态表现、交互反馈、适配尺寸）并指明对应 design.html 的哪一屏哪个状态；AC 已覆盖的行为不重复。落地方式在 D 定下后由技术方案的 designer 补上，随技术方案一起审。
+- **设计验收**：编号 `D-xx`，针对本次的样式与交互调整，写明可检查的条件（布局、各状态表现、交互反馈、适配尺寸）并指明对应 design.html 的哪一屏哪个状态；AC 已覆盖的行为不重复。落地方式在 D 定下后补进技术方案，随技术方案一起审。
 
 ## 3. 与用户讨论
 
@@ -32,7 +32,7 @@ designer 产出设计说明正文，主 agent 写入 `.devflow/<需求>/design.m
 
 ## 4. 审查
 
-按 `references/review-loop.md` 执行：两份方案各自审查（各带 acceptance.md 中对应的部分），再做一次交叉一致性检查。
+按 `references/review-loop.md` 执行：派一个 reviewer 同时审两份方案（带上 acceptance.md），并做交叉一致性检查；方案很大时再按技术、设计拆成两个 reviewer，由其中一个负责交叉检查。
 
 技术方案的审查要点：
 - 是否满足产品方案和全部 AC，有无更简单的做法。

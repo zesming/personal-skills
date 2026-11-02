@@ -4,7 +4,7 @@
 
 ## 1. 收集上下文（并行）
 
-派 explorer 并行查三类信息，主 agent 只看结论：
+收集三类信息。本地现状由主 agent 自己看（后面写方案要用）；外部调研这类会产生大量临时输出的，派 explorer 并行查，只取结论：
 
 - **用户输入**：请求原文、给出的附件、链接、截图。
 - **本地现状**：相关功能现在怎么工作、涉及哪些模块和页面、已有的产品/设计/技术文档、已有的测试。
@@ -20,7 +20,7 @@
 
 ## 3. 写产品方案
 
-designer 按 `assets/templates/product.md` 产出方案正文，并按 `assets/templates/acceptance.md` 产出用户验收部分；主 agent 分别写入 `.devflow/<需求>/product.md` 和 `acceptance.md`。
+主 agent 按 `assets/templates/product.md` 写方案正文，按 `assets/templates/acceptance.md` 写用户验收部分，分别存为 `.devflow/<需求>/product.md` 和 `acceptance.md`。
 
 - 用户验收用例每条编号 `AC-xx`，覆盖本次每个设计点和用户路径的主流程、关键边界和异常；用户能感知的非功能要求（等待时长、支持的平台、权限）也写成用例。
 - 从用户视角写 Given/When/Then，可执行、可观察；不写"体验良好"这类说法，也不写点哪个按钮这类界面操作。
@@ -28,7 +28,7 @@ designer 按 `assets/templates/product.md` 产出方案正文，并按 `assets/t
 
 ## 4. 交互原型（涉及 UI 时）
 
-worker 按产品方案制作 `.devflow/<需求>/prototype.html`：
+按产品方案制作 `.devflow/<需求>/prototype.html`（可以交给 worker）：
 
 - 单个自包含的 HTML 文件，本地浏览器直接打开，不依赖构建和外部服务。
 - **低保真、可交互**：灰阶线框即可，但要能点击走通主要用户旅程，覆盖关键状态（空、加载、错误、成功）；视觉细节留给阶段 2 的设计稿。
