@@ -15,60 +15,59 @@
 
 ## 安装
 
-`skills/<name>/` 是唯一源文件。按本机实际使用的 agent，把每个含 `SKILL.md` 的目录软链接到该 agent 的用户级 skills 入口。
+仓库里的 `skills/<name>/` 是每个技能的源目录。按客户端使用以下两个入口，软链接都直接指向仓库。
 
 ### 入口目录
 
-| Agent | 用户级 skills 目录 |
+| 客户端 | 用户级 skills 入口 |
 | --- | --- |
-| Codex | `~/.codex/skills/` |
-| Claude Code | `~/.claude/skills/` |
-| DeepSeek Harness | `~/.dsh/skills/` |
-| 其他支持 `.agents/skills` 的客户端 | `~/.agents/skills/` |
+| Codex、DeepSeek Harness、TRAE CLI 等支持共享目录的客户端 | `~/.agents/skills/` |
+| Claude Code | `~/.claude/skills/`，或 `$CLAUDE_CONFIG_DIR/skills/` |
 
-设置自定义配置根目录时（如 `CODEX_HOME`、`DSH_HOME`），使用该目录下的 `skills/`。
-
-`~/.agents/skills/` 是跨客户端约定目录，Codex、Gemini CLI、Cursor、goose、opencode、VS Code、Windsurf、Augment、Roo Code、Factory、Devin CLI 等都支持；Claude Code 不扫描它，需单独链接到 `~/.claude/skills/`。
+Codex、DeepSeek Harness 和 TRAE CLI 直接读取共享入口，避免在 `~/.codex/skills/`、`~/.dsh/skills/` 和 `~/.trae/skills/` 再建同名链接。Claude Code 使用自己的入口，需要单独建立一组链接。
 
 ### 建立链接
 
 ```sh
-REPO=~/Projects/personal-skills
-ROOTS="$HOME/.codex/skills $HOME/.claude/skills $HOME/.dsh/skills $HOME/.agents/skills"
+REPO="$HOME/Projects/personal-skills"
+CLAUDE_SKILLS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
 
-for s in "$REPO"/skills/*/; do
-  n=$(basename "$s")
-  for root in $ROOTS; do
-    mkdir -p "$root"
-    target="$root/$n"
-    if [ -L "$target" ]; then
-      ln -sfn "${s%/}" "$target"
-    elif [ -e "$target" ]; then
-      echo "SKIP $target: 已存在非链接内容，请先人工确认"
+for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS"; do
+  mkdir -p "$root" || continue
+  for skill in "$REPO"/skills/*; do
+    [ -r "$skill/SKILL.md" ] || continue
+    target="$root/${skill##*/}"
+    if [ -L "$target" ] && [ "$target" -ef "$skill" ]; then
+      continue
+    elif [ -e "$target" ] || [ -L "$target" ]; then
+      printf '跳过已存在的入口 %s\n' "$target" >&2
     else
-      ln -s "${s%/}" "$target"
+      ln -s "$skill" "$target"
     fi
   done
 done
 ```
 
-已指向同一源目录的链接会保持不变；已存在的真实目录或指向别处的链接只报告不覆盖，确认后再手工处理。脚本不会把新链接建进已有目录里。
+重复运行会复用正确的链接，并提示需要检查的同名入口。若按旧版说明安装过，确认共享入口可用后，可移除 Codex、DeepSeek Harness 和 TRAE CLI 专用目录里指向本仓库的旧链接。
 
 ### 验证
 
 ```sh
-REPO=~/Projects/personal-skills
-for s in "$REPO"/skills/*/; do
-  n=$(basename "$s")
-  for root in "$HOME/.codex/skills" "$HOME/.claude/skills" "$HOME/.dsh/skills" "$HOME/.agents/skills"; do
-    [ -r "$root/$n/SKILL.md" ] || echo "MISSING: $root/$n"
+REPO="$HOME/Projects/personal-skills"
+CLAUDE_SKILLS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
+
+for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS"; do
+  for skill in "$REPO"/skills/*; do
+    [ -r "$skill/SKILL.md" ] || continue
+    target="$root/${skill##*/}"
+    if [ ! -L "$target" ] || [ ! "$target" -ef "$skill" ]; then
+      printf '缺失或指向错误 %s\n' "$target" >&2
+    fi
   done
 done
 ```
 
 再在对应客户端的技能列表中确认条目可用；未识别时重载技能或重启客户端。
-
-DeepSeek Harness 只发现一层（`<根>/<name>/SKILL.md` 或 `<根>/<name>.md`），链接必须直接位于根目录下；同名 skill 以 `~/.dsh/skills/` 优先于 `~/.agents/skills/`。
 
 ## 使用
 
