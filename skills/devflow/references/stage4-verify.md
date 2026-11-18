@@ -24,7 +24,7 @@
 
 ## 3. 验收审查
 
-回归通过后，对整体再走一次「做 / 审」。提供给 reviewer：`product.md`、`design.md`/`design.html`、`acceptance.md`、`selftest.md`、`regression.md`、PR，以及本阶段测试改动的 diff。批量修复时，用问题清单和 `review.md` 中各批验证记录代替前四项。
+回归通过后，对整体再走一次「做 / 审」。提供给 reviewer：`product.md`、`design.md`/`design.html`、`acceptance.md`、`selftest.md`、`regression.md`、PR（尚未创建时提供本地净 diff），以及本阶段测试改动的 diff。批量修复时，用问题清单和 `review.md` 中各批验证记录代替前四项。
 
 重点检查：
 
@@ -34,7 +34,7 @@
 
 ## 4. 更新 PR/MR
 
-所有测试通过后，将测试改动和回归期间的修复推到同一个 PR/MR，并更新 PR 描述中的验证部分。已有 PR/MR 按 stage3 第 1 节处理，用评论补充验证结果。
+回归和验收审查通过后，已有 PR/MR 按授权推送最终改动并按 stage3 第 1 节更新验证记录。明确约定此时首次发布时，沿用交接记录的授权、公开检查和报告发布约定。满足条件后，向已登记的目标分支开 PR/MR，写入验证结果并登记链接；未满足时留本地。
 
 ## 5. 合入（必须经用户确认）
 
