@@ -1,6 +1,6 @@
 # 范围审查：审 PR/MR 的评论与结论
 
-审 PR/MR 时读本文件：替换 SKILL.md 第 4、5 步；第 3 步提问用到「结论与确认」「发布前」；再审的范围计算在 `references/scope.md` 第 1 节。平台 CLI / API 的用法照 scope.md「平台 CLI / API」。
+PR/MR 范围审查用本文件替换 SKILL.md 第 4、5 步。第 3 步的结论确认和公开仓库发前确认按「结论与确认」「发布前」执行；再审的范围计算见 `references/scope.md` 第 1 节，平台 CLI / API 用法见 scope.md「平台 CLI / API」。
 
 不写 report.md，不建分支，不开 PR/MR。要发的内容先写进 `<AUDIT>/review.md`：每条的编号、锚点（文件、行号、新旧版本哪一侧）、评论正文，再加上总评论和结论。它是发布的依据；发不出去时，它就是交给用户的本地报告。
 
