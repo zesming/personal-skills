@@ -15,7 +15,7 @@
 
 ## 安装
 
-仓库里的 `skills/<name>/` 是每个技能的源目录。按客户端使用以下两个入口，软链接都直接指向仓库。
+仓库里的 `skills/<name>/` 是每个技能的源目录。按客户端使用以下三个入口，软链接都直接指向仓库。
 
 ### 入口目录
 
@@ -23,16 +23,20 @@
 | --- | --- |
 | Codex、DeepSeek Harness、TRAE CLI 等支持共享目录的客户端 | `~/.agents/skills/` |
 | Claude Code | `~/.claude/skills/`，或 `$CLAUDE_CONFIG_DIR/skills/` |
+| Antigravity（Gemini 桌面端 / `agy` CLI） | `~/.gemini/config/skills/` |
 
-Codex、DeepSeek Harness 和 TRAE CLI 直接读取共享入口，避免在 `~/.codex/skills/`、`~/.dsh/skills/` 和 `~/.trae/skills/` 再建同名链接。Claude Code 使用自己的入口，需要单独建立一组链接。
+Codex、DeepSeek Harness 和 TRAE CLI 直接读取共享入口，避免在 `~/.codex/skills/`、`~/.dsh/skills/` 和 `~/.trae/skills/` 再建同名链接。Claude Code 和 Antigravity 各有自己的入口，需要分别建立链接。
+
+Antigravity 的全局定制目录是 `~/.gemini/config/`，它**不读** `~/.agents/skills/`。注意 `~/.gemini/config/skills.json` 里的 `~/` 不会展开，只能写绝对路径；直接建 `~/.gemini/config/skills/` 软链接更省事。
 
 ### 建立链接
 
 ```sh
 REPO="$HOME/Projects/personal-skills"
 CLAUDE_SKILLS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
+ANTIGRAVITY_SKILLS="$HOME/.gemini/config/skills"
 
-for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS"; do
+for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS" "$ANTIGRAVITY_SKILLS"; do
   mkdir -p "$root" || continue
   for skill in "$REPO"/skills/*; do
     [ -r "$skill/SKILL.md" ] || continue
@@ -48,15 +52,16 @@ for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS"; do
 done
 ```
 
-重复运行会复用正确的链接，并提示需要检查的同名入口。若按旧版说明安装过，确认共享入口可用后，可移除 Codex、DeepSeek Harness 和 TRAE CLI 专用目录里指向本仓库的旧链接。
+重复运行会复用正确的链接，并提示需要检查的同名入口。若按旧版说明安装过，确认共享入口可用后，可移除 Codex、DeepSeek Harness 和 TRAE CLI 专用目录里指向本仓库的旧链接。Antigravity 的 `~/.gemini/config/skills/` 不存在时会被自动创建。
 
 ### 验证
 
 ```sh
 REPO="$HOME/Projects/personal-skills"
 CLAUDE_SKILLS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills"
+ANTIGRAVITY_SKILLS="$HOME/.gemini/config/skills"
 
-for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS"; do
+for root in "$HOME/.agents/skills" "$CLAUDE_SKILLS" "$ANTIGRAVITY_SKILLS"; do
   for skill in "$REPO"/skills/*; do
     [ -r "$skill/SKILL.md" ] || continue
     target="$root/${skill##*/}"
