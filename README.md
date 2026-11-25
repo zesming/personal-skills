@@ -29,6 +29,8 @@ Codex、DeepSeek Harness 和 TRAE CLI 直接读取共享入口，避免在 `~/.c
 
 Antigravity 的全局定制目录是 `~/.gemini/config/`，它**不读** `~/.agents/skills/`。注意 `~/.gemini/config/skills.json` 里的 `~/` 不会展开，只能写绝对路径；直接建 `~/.gemini/config/skills/` 软链接更省事。
 
+项目内的 `.agents/skills/` 是工作区入口，不等同于 Antigravity 的全局技能目录。参见 [Antigravity 官方目录说明](https://antigravity.google/docs/skills)。
+
 ### 建立链接
 
 ```sh
@@ -73,6 +75,8 @@ done
 ```
 
 再在对应客户端的技能列表中确认条目可用；未识别时重载技能或重启客户端。
+
+Antigravity 可在设置中的项目 Customizations 查看技能；建立链接后新开对话，仍未出现时重启应用。CLI 可运行 `/skills reload` 重新加载。
 
 ## 使用
 
