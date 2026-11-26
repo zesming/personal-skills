@@ -4,7 +4,7 @@
 
 盘点本次改动涉及的现有测试，包括 e2e、集成测试和截图基线：记录使用的框架、运行方式和覆盖功能。测试多或分布广时，可派 explorer 并行调查。
 
-对照 `acceptance.md` 的落地方式（批量修复则对照 `review.md` 中各条目的验证记录）和阶段 3 已更新的项目文档：
+对照 `acceptance.md` 的落地方式（批量修复见 `references/batch-fix.md`，对照 `review.md` 中各条目的验证记录）和阶段 3 已更新的项目文档：
 
 - **过时或失效的用例**：功能已移除或行为已按方案改变、选择器失效、断言不再代表预期行为时，删除或更新用例。每项删除都说明理由。
 - **缺失的用例**：本次按验收要求应有但尚不存在的用例，按对应落地方式补齐。
@@ -24,7 +24,7 @@
 
 ## 3. 验收审查
 
-回归通过后，对整体再走一次「做 / 审」。提供给 reviewer：`product.md`、`design.md`/`design.html`、`acceptance.md`、`selftest.md`、`regression.md`、PR（尚未创建时提供本地净 diff），以及本阶段测试改动的 diff。批量修复时，用问题清单和 `review.md` 中各批验证记录代替前四项。
+回归通过后，对整体再走一次「做 / 审」。提供给 reviewer：`product.md`、`design.md`/`design.html`、`acceptance.md`、`selftest.md`、`regression.md`、PR（尚未创建时提供本地净 diff），以及本阶段测试改动的 diff。批量修复（见 `references/batch-fix.md`）时，用问题清单和 `review.md` 中各批验证记录代替前四项。
 
 重点检查：
 

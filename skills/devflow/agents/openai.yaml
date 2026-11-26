@@ -1,0 +1,4 @@
+interface:
+  display_name: "Devflow"
+  short_description: "按改动规模执行方案、开发、独立审查、回归与收尾的端到端开发流程"
+  default_prompt: "使用 $devflow 完成这个功能需求或较复杂修复：先判断完整、精简或批量修复档位，再按流程推进方案、实现、独立审查与验证。"
